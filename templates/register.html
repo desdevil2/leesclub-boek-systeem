@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ book_title or 'Book Discussion Registration' }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+</head>
+<body>
+    <div class="container">
+        <main class="card" role="main">
+            <section class="book">
+                <img class="book-image" src="{{ book_image or url_for('static', filename='images/default-book.jpg') }}" alt="{{ book_title or 'Book cover' }}">
+                <div class="book-info">
+                    <h1 class="title">{{ book_title or 'Untitled Book' }}</h1>
+                    <p class="description">{{ book_description or 'No description available.' }}</p>
+                    <ul class="stats">
+                        <li><strong id="registered-count">{{ registered_count or 0 }}</strong> Registered</li>
+                        <li><strong id="spots-left">{% if capacity is not none and registered_count is not none %}{{ capacity - registered_count }}{% else %}—{% endif %}</strong> Spots left</li>
+                    </ul>
+                </div>
+            </section>
+
+            <aside class="register" aria-labelledby="register-heading">
+                <form id="register-form" action="url_for('register')" method="post" novalidate>
+                    <h2 id="register-heading">Register for this discussion</h2>
+                    <div class="fields">
+                        <label>Full name
+                            <input type="text" name="name" required placeholder="Your full name">
+                        </label>
+                        <label>Email
+                            <input type="email" name="email" required placeholder="you@example.com">
+                        </label>
+                    </div>
+                    <button type="submit" class="btn">Register</button>
+                    <p class="message" id="message" aria-live="polite"></p>
+                </form>
+            </aside>
+            <section class="information">
+                <ul>
+                    <li>Datum: {{date}}</li>
+                    <li>Uur: {{time}}</li>
+                    <li>Locatie: {{location}}</li>
+                </ul>
+                    
+
+            </section>
+        </main>
+        <footer class="footer">Hosted by Leesclub</footer>
+    </div>
+
+    <script>
+    // Handles AJAX submission to keep the page responsive. Backend should return JSON {registered, spots_left, message} on success.
+    (function(){
+        const form = document.getElementById('register-form');
+        if(!form) return;
+        form.addEventListener('submit', async function(e){
+            e.preventDefault();
+            const msgEl = document.getElementById('message');
+            msgEl.textContent = '';
+            const data = new FormData(form);
+            try{
+                const res = await fetch(form.action, {
+                    method: (form.method || 'POST'),
+                    body: data,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                if(!res.ok){
+                    const text = await res.text();
+                    msgEl.classList.add('error');
+                    msgEl.textContent = text || 'Registration failed';
+                    return;
+                }
+                const json = await res.json().catch(()=>({success:true, message:'Registered'}));
+                msgEl.classList.remove('error');
+                msgEl.textContent = json.message || 'Registered successfully';
+                if(json.registered != null){
+                    document.getElementById('registered-count').textContent = json.registered;
+                }
+                if(json.spots_left != null){
+                    document.getElementById('spots-left').textContent = json.spots_left;
+                }
+                form.reset();
+            }catch(err){
+                msgEl.classList.add('error');
+                msgEl.textContent = 'Network error, try again.';
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

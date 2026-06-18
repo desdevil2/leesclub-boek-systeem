@@ -21,8 +21,8 @@ def home():
     vars["capacity"] = data[1]
     vars["book_title"] = data[2]
     vars["book_description"] = data[3]
-    vars["registered_count"] = 7
     vars["date"] = data[4]
     vars["time"] = data[5]
-    vars["location"] = "Meilweg 7, 3600 Genk"
+    vars["location"] = data[6]
+    vars["registered_count"] = data[7]
     return render_template("register.html", **vars)

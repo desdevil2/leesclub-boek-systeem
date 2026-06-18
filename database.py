@@ -1,5 +1,5 @@
-database = "postgresql://leesclub_boek_db_user:siM8HApEL5DvwxJZSwdb5HrH1QO9grle@dpg-d8q0q7eq1p3s739bsb00-a.frankfurt-postgres.render.com/leesclub_boek_db"
 import psycopg2
+from credentials import database
 def connect_to_db():
     try:
         connection = psycopg2.connect(database)

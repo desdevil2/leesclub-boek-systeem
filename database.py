@@ -13,4 +13,19 @@ def connect_to_db():
     except Exception as e:
         print("Error!")
         print(e)
-connect_to_db()
+
+
+
+def get_cursor():
+    connection = psycopg2.connect(database)
+    cursor = connection.cursor()
+    return cursor
+
+
+def get_book_day(id):
+    cursor = get_cursor()
+    query = "SELECT * FROM Leesdagen WHERE id = (%s)"
+    cursor.execute(query, [id])
+    data = cursor.fetchone()
+    return data
+print(get_book_day(1))

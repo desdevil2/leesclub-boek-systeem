@@ -18,14 +18,14 @@ def connect_to_db():
 
 
 
-def get_cursor():
+def get_connection():
     connection = psycopg2.connect(database)
-    cursor = connection.cursor()
-    return cursor
+    return connection
 
 
 def get_book_day(id):
-    cursor = get_cursor()
+    connection = get_connection()
+    cursor = connection.cursor()
     query = "SELECT * FROM Leesdagen WHERE id = (%s)"
     cursor.execute(query, [id])
     data = cursor.fetchone()
@@ -33,5 +33,26 @@ def get_book_day(id):
     cursor.execute(query, [id])
     number = cursor.fetchone()
     return data + number
-print(get_book_day(1))
+#print(get_book_day(1))
 #connect_to_db()
+
+
+def register_for_event(id, email):
+    connection = get_connection()
+    cursor = connection.cursor()
+    query = "INSERT INTO Leesboekingen VALUES (DEFAULT, %s, %s, 'abc');"
+    cursor.execute(query, [id, email])
+    connection.commit()
+    cursor.execute("SELECT * FROM Leesboekingen;")
+    data = cursor.fetchall()
+    print(data)
+
+
+def delete_leesboekingen():
+    connection = get_connection()
+    cursor = connection.cursor()
+    query = "DELETE FROM Leesboekingen WHERE 1=1;"
+    cursor.execute(query)
+    connection.commit()
+
+#delete_leesboekingen()

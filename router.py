@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-from database import get_book_day
+from flask import Flask, render_template, request
+from database import get_book_day, register_for_event
 app = Flask(__name__)
 
 @app.route("/")
@@ -18,6 +18,7 @@ def home():
     # vars["date"] = "01/04/2026"
     # vars["time"] = "19:00"
     # vars["location"] = "Meilweg 7, 3600 Genk"
+    vars["id"] = data[0]
     vars["capacity"] = data[1]
     vars["book_title"] = data[2]
     vars["book_description"] = data[3]
@@ -26,3 +27,10 @@ def home():
     vars["location"] = data[6]
     vars["registered_count"] = data[7]
     return render_template("register.html", **vars)
+
+@app.route("/register_for_event", methods=["POST"])
+def register_for_event_post():
+    email = request.form["email"]
+    id = int(request.form["id"])
+    register_for_event(id, email)
+    return ""

@@ -1,17 +1,19 @@
-import psycopg2
+import pyodbc
 from credentials import database
 def connect_to_db():
     try:
-        connection = psycopg2.connect(database)
+        connection = pyodbc.connect(database)
         cursor = connection.cursor()
-        #cursor.execute("CREATE TABLE Leesdagen (id serial PRIMARY KEY, max_guests int , book_name varchar, book_description varchar , date date, time time);")
-        #cursor.execute("INSERT INTO Leesdagen VALUES (DEFAULT, 10, 'The hunger games', 'This is a cool book', '2001/12/15', '19:00')")
-        #cursor.execute("CREATE TABLE Leesboekingen (id SERIAL PRIMARY KEY, dag_id int, email varchar, unsubscribe_key varchar, CONSTRAINT dag FOREIGN KEY (dag_id) REFERENCES Leesdagen(id));")
-        #cursor.execute("INSERT INTO Leesboekingen VALUES (DEFAULT, 1, 'robinweynjes@gmail.com', 'abc');")
-        cursor.execute("DELETE FROM Leesdagen WHERE id = 2;")
+        cursor.commit()
+        cursor.execute("CREATE TABLE Leesdagen (id INT IDENTITY(1,1) PRIMARY KEY, max_guests INT, book_name VARCHAR(255), book_description VARCHAR(MAX), date DATE, time TIME, location VARCHAR(255));")
+        cursor.execute("INSERT INTO Leesdagen (max_guests, book_name, book_description, date, time, location) VALUES (10, 'The hunger games', 'This is a cool book', '2001-12-15', '19:00:00', 'Meilweg 7, 3600 Genk');")
+        cursor.execute("CREATE TABLE Leesboekingen (id INT IDENTITY(1,1) PRIMARY KEY, dag_id INT, email VARCHAR(255), unsubscribe_key VARCHAR(255), CONSTRAINT dag FOREIGN KEY (dag_id) REFERENCES Leesdagen(id));")
+        cursor.execute("INSERT INTO Leesboekingen (dag_id, email, unsubscribe_key) VALUES (1, 'robinweynjes@gmail.com', 'abc');")
+        #cursor.execute("DELETE FROM Leesdagen WHERE id = 2;")
         connection.commit()
         #cursor.execute("SELECT * FROM Leesdagen;")
         #data = cursor.fetchall()
+        print("SUCCES")
     except Exception as e:
         print("Error!")
         print(e)
@@ -19,28 +21,29 @@ def connect_to_db():
 
 
 def get_connection():
-    connection = psycopg2.connect(database)
+    connection = pyodbc.connect(database)
     return connection
 
 
 def get_book_day(id):
     connection = get_connection()
     cursor = connection.cursor()
-    query = "SELECT * FROM Leesdagen WHERE id = (%s)"
+    query = "SELECT * FROM Leesdagen WHERE id = ?"
     cursor.execute(query, [id])
     data = cursor.fetchone()
-    query = "SELECT COUNT(*) FROM Leesboekingen WHERE dag_id = (%s)"
+    query = "SELECT COUNT(*) FROM Leesboekingen WHERE dag_id = ?"
     cursor.execute(query, [id])
     number = cursor.fetchone()
-    return data + number
-#print(get_book_day(1))
+    return tuple(data) + tuple(number)
 #connect_to_db()
+print(get_book_day(1))
+
 
 
 def register_for_event(id, email):
     connection = get_connection()
     cursor = connection.cursor()
-    query = "INSERT INTO Leesboekingen VALUES (DEFAULT, %s, %s, 'abc');"
+    query = "INSERT INTO Leesboekingen VALUES (DEFAULT, ?, ?, 'abc');"
     cursor.execute(query, [id, email])
     connection.commit()
     cursor.execute("SELECT * FROM Leesboekingen;")

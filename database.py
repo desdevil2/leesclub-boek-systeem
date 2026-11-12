@@ -43,7 +43,7 @@ print(get_book_day(1))
 def register_for_event(id, email):
     connection = get_connection()
     cursor = connection.cursor()
-    query = "INSERT INTO Leesboekingen VALUES (DEFAULT, ?, ?, 'abc');"
+    query = "INSERT INTO Leesboekingen (dag_id, email, unsubscribe_key) VALUES (?, ?, 'abc');"
     cursor.execute(query, [id, email])
     connection.commit()
     cursor.execute("SELECT * FROM Leesboekingen;")

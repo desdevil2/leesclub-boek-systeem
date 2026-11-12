@@ -1,11 +1,10 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, jsonify
 from database import get_book_day, register_for_event
 app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    return "<p>Hello, World!</p>"
-
+    return redirect("/register")
 
 @app.route("/register")
 def home():
@@ -33,4 +32,7 @@ def register_for_event_post():
     email = request.form["email"]
     id = int(request.form["id"])
     register_for_event(id, email)
-    return ""
+    resp = jsonify(success=True)
+    return resp
+
+

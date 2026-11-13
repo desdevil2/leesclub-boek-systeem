@@ -31,8 +31,11 @@ def home():
 def register_for_event_post():
     email = request.form["email"]
     id = int(request.form["id"])
-    register_for_event(id, email)
-    resp = jsonify(success=True)
-    return resp
+    succes = register_for_event(id, email)
+    if succes:
+        return "SUCCES"
+    else:
+        
+        return "FULL"
 
 

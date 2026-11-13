@@ -36,19 +36,23 @@ def get_book_day(id):
     number = cursor.fetchone()
     return tuple(data) + tuple(number)
 #connect_to_db()
-print(get_book_day(1))
+#print(get_book_day(1))
 
 
 
 def register_for_event(id, email):
     connection = get_connection()
     cursor = connection.cursor()
-    query = "INSERT INTO Leesboekingen (dag_id, email, unsubscribe_key) VALUES (?, ?, 'abc');"
-    cursor.execute(query, [id, email])
-    connection.commit()
-    cursor.execute("SELECT * FROM Leesboekingen;")
-    data = cursor.fetchall()
-    print(data)
+    registration_data = get_book_day(id)
+    amount_registered = registration_data[7]
+    max_registered = registration_data[1]
+    if amount_registered >= max_registered:
+        return False
+    else:
+        query = "INSERT INTO Leesboekingen (dag_id, email, unsubscribe_key) VALUES (?, ?, 'abc');"
+        cursor.execute(query, [id, email])
+        connection.commit()
+        return True
 
 
 def delete_leesboekingen():
@@ -58,4 +62,4 @@ def delete_leesboekingen():
     cursor.execute(query)
     connection.commit()
 
-#delete_leesboekingen()
+delete_leesboekingen()

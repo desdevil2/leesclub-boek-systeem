@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, jsonify
-from database import get_book_day, register_for_event
+from database import get_book_day, register_for_event, is_registered, RegisterStatus
 app = Flask(__name__)
 
 @app.route("/")
@@ -31,11 +31,14 @@ def home():
 def register_for_event_post():
     email = request.form["email"]
     id = int(request.form["id"])
-    succes = register_for_event(id, email)
-    if succes:
+    status = register_for_event(id, email)
+    if status == RegisterStatus.SUCCES:
         return "SUCCES"
-    else:
-        
+    elif status == RegisterStatus.FULL:
         return "FULL"
+    elif status == RegisterStatus.DUPLICATE:
+        return "DUPLICATE"
+    else:
+        return "ERROR"
 
 

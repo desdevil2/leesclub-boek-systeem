@@ -47,12 +47,14 @@ def register_for_event(id, email):
     amount_registered = registration_data[7]
     max_registered = registration_data[1]
     if amount_registered >= max_registered:
-        return False
+        return RegisterStatus.FULL
+    elif is_registered(id, email):
+        return RegisterStatus.DUPLICATE
     else:
         query = "INSERT INTO Leesboekingen (dag_id, email, unsubscribe_key) VALUES (?, ?, 'abc');"
         cursor.execute(query, [id, email])
         connection.commit()
-        return True
+        return RegisterStatus.SUCCES
 
 
 def delete_leesboekingen():
@@ -62,4 +64,19 @@ def delete_leesboekingen():
     cursor.execute(query)
     connection.commit()
 
-delete_leesboekingen()
+
+def is_registered(id, email):
+    connection = get_connection()
+    cursor = connection.cursor()
+    query = "SELECT COUNT(*) FROM Leesboekingen WHERE dag_id = ? AND email = ?;"
+    cursor.execute(query, [id, email])
+    registered = cursor.fetchone()[0]
+    if registered == 1:
+        return True
+    else:
+        return False
+#delete_leesboekingen()
+class RegisterStatus(enumerate):
+    SUCCES = 1
+    DUPLICATE = 2
+    FULL = 3

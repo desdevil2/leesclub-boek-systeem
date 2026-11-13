@@ -30,6 +30,10 @@
                 msgEl.classList.add('error');
                 msgEl.textContent = "Registration failed, event is full!"
             }
+            else if (responseText == "DUPLICATE") {
+                msgEl.classList.add('error');
+                msgEl.textContent = "You are already registered!"
+            }
             else {
                 msgEl.classList.add('error');
                 msgEl.textContent = "Error while trying to register!";

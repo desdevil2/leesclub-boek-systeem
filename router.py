@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, redirect, jsonify
-from database import get_book_day, register_for_event, is_registered, RegisterStatus, get_all_book_days
+from flask import Flask, render_template, request, redirect
+from database import register_for_event, RegisterStatus, get_all_book_days, create_event
 app = Flask(__name__)
 
 @app.route("/")
@@ -32,5 +32,14 @@ def register_for_event_post():
         return "DUPLICATE"
     else:
         return "ERROR"
+    
+@app.route("/create_event", methods=["GET"])
+def create_event_get():
+    return render_template("create_event.html")
+
+@app.route("/create_event", methods=["POST"])
+def create_event_post():
+    create_event(request.form)
+    return "SUCCES"
 
 

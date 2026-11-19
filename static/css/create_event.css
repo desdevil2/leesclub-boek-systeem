@@ -1,0 +1,285 @@
+
+:root {
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --muted: #6b7280;
+    --accent: #2563eb;
+    --accent-600: #1e40af;
+    --radius: 12px;
+    --shadow: 0 6px 18px rgba(20,24,40,0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, system-ui, sans-serif;
+    background: linear-gradient(180deg, var(--bg), #eef2f7);
+    color: #111827;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 24px;
+}
+
+.page-header {
+    margin-bottom: 25px;
+}
+
+.page-header h1 {
+    margin-bottom: 5px;
+}
+
+.page-header p {
+    color: var(--muted);
+}
+
+/* MAIN CONTENT */
+
+.event-content {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px;
+    width: 100%;
+}
+
+/* BOOK DETAILS */
+
+.section h2,
+.information h2,
+.register h2 {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+.section-description {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.event-details {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.image-upload {
+    width: 220px;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.image-upload img {
+    width: 220px;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    display: block;
+    margin-bottom: 15px;
+}
+
+.upload-btn {
+    display: block;
+    background: #eff6ff;
+    color: var(--accent);
+    border: 1px solid #bfdbfe;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.upload-btn:hover {
+    background: #dbeafe;
+}
+
+.image-upload small {
+    display: block;
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.book-info {
+    flex: 1;
+    min-width: 0;
+}
+
+/* INPUTS */
+
+label {
+    display: block;
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 7px;
+    font-weight: 500;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #111827;
+    margin-bottom: 18px;
+    background: white;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+textarea {
+    resize: vertical;
+    line-height: 1.6;
+}
+
+/* EVENT INFORMATION */
+
+.information {
+    margin-top: 35px;
+    padding: 22px;
+    background: #f8fafc;
+    border-radius: 10px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 20px;
+}
+
+.form-group {
+    min-width: 0;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+/* REGISTRATION */
+
+.register {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.register small {
+    display: block;
+    color: var(--muted);
+    margin-top: -10px;
+    margin-bottom: 15px;
+    font-size: 12px;
+}
+
+/* BUTTONS */
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.btn,
+.cancel-btn {
+    padding: 11px 22px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+}
+
+.btn:hover {
+    background: var(--accent-600);
+}
+
+.cancel-btn {
+    background: white;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+}
+
+.cancel-btn:hover {
+    background: #f9fafb;
+}
+
+/* FOOTER */
+
+.footer {
+    margin-top: 25px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 550px) {
+
+    .container {
+        padding: 14px;
+        margin: 15px auto;
+    }
+
+    .event-content {
+        padding: 18px;
+    }
+
+    .event-details {
+        flex-direction: column;
+    }
+
+    .image-upload {
+        width: 100%;
+    }
+
+    .image-upload img {
+        width: 160px;
+        height: 220px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn,
+    .cancel-btn {
+        width: 100%;
+    }
+}

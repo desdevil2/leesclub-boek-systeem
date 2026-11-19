@@ -113,4 +113,25 @@ def convert_row_to_dict(row):
     vars["location"] = row[6]
     vars["registered_count"] = row[7]
     return vars
+
+def create_event(data):
+    title = data["title"]
+    description = data["description"]
+    date = data["date"]
+    location = data["location"]
+    capacity = data["capacity"]
+    time = data["time"]
+    connection = get_connection()
+    cursor = connection.cursor()
+    query = "INSERT INTO Leesdagen (max_guests, book_name, book_description, date, time, location) VALUES (?, ?, ?, ?, ?, ?);"
+    cursor.execute(query, [capacity, title, description, date, time, location])
+    cursor.commit()
 #print(get_all_book_days())
+
+def clear_events():
+    connection = get_connection()
+    cursor = connection.cursor()
+    query = "DELETE FROM Leesdagen WHERE date >= '2026-01-01';"
+    cursor.execute(query)
+    cursor.commit()
+clear_events()

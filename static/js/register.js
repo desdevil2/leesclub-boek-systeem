@@ -49,9 +49,85 @@
 })();
 
 
+document.addEventListener("DOMContentLoaded", () => {
+
+    const eventItems = document.querySelectorAll(".event-item");
+
+    const bookImage = document.getElementById("book-image");
+    const bookTitle = document.getElementById("book-title");
+    const bookDescription = document.getElementById("book-description");
+
+    const registeredCount = document.getElementById("registered-count");
+    const spotsLeft = document.getElementById("spots-left");
+
+    const eventDate = document.getElementById("event-date");
+    const eventTime = document.getElementById("event-time");
+    const eventLocation = document.getElementById("event-location");
+
+    const eventId = document.getElementById("event-id");
+
+    eventItems.forEach(item => {
+
+        item.addEventListener("click", () => {
+
+            // Remove active styling from previous selection
+            eventItems.forEach(event => {
+                event.classList.remove("active");
+            });
+
+            // Highlight selected event
+            item.classList.add("active");
+
+            // Read event information
+            const data = item.dataset;
+
+            // Update book information
+            bookTitle.textContent = data.title;
+            bookDescription.textContent = data.description;
+
+            bookImage.src = data.image;
+            bookImage.alt = data.title;
+
+            // Update registration statistics
+            const registered = Number(data.registered) || 0;
+
+            registeredCount.textContent = registered;
+
+            if (data.capacity !== "") {
+                spotsLeft.textContent =
+                    Number(data.capacity) - registered;
+            } else {
+                spotsLeft.textContent = "—";
+            }
+
+            // Update event information
+            eventDate.textContent = data.date;
+            eventTime.textContent = data.time;
+            eventLocation.textContent = data.location;
+
+            // Update hidden registration ID
+            eventId.value = data.id;
+
+            // Clear previous messages
+            document.getElementById("message").textContent = "";
+
+        });
+
+    });
+
+});
+
 function updateRegistered(){
     registered = document.getElementById("registered-count")
     registered.innerHTML = parseInt(registered.innerHTML) + 1
     spotsLeft = document.getElementById("spots-left")
     spotsLeft.innerHTML = parseInt(spotsLeft.innerHTML) - 1
+
+    eventId = document.getElementById("event-id").value;
+    const eventItems = document.querySelectorAll(".event-item");
+    eventItems.forEach(element => {
+        if (element.dataset.id == eventId) {
+            element.dataset.registered = String(Number(element.dataset.registered) + 1);
+        }
+    });
 }

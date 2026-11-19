@@ -34,7 +34,8 @@ def get_book_day(id):
     query = "SELECT COUNT(*) FROM Leesboekingen WHERE dag_id = ?"
     cursor.execute(query, [id])
     number = cursor.fetchone()
-    return tuple(data) + tuple(number)
+    row = tuple(data) + tuple(number)
+    return convert_row_to_dict(row)
 #connect_to_db()
 #print(get_book_day(1))
 
@@ -44,8 +45,8 @@ def register_for_event(id, email):
     connection = get_connection()
     cursor = connection.cursor()
     registration_data = get_book_day(id)
-    amount_registered = registration_data[7]
-    max_registered = registration_data[1]
+    amount_registered = registration_data["registered_count"]
+    max_registered = registration_data["capacity"]
     if amount_registered >= max_registered:
         return RegisterStatus.FULL
     elif is_registered(id, email):
@@ -80,3 +81,36 @@ class RegisterStatus(enumerate):
     SUCCES = 1
     DUPLICATE = 2
     FULL = 3
+
+
+def add_bookings():
+    connection = get_connection()
+    cursor = connection.cursor()
+    cursor.execute("INSERT INTO Leesdagen (max_guests, book_name, book_description, date, time, location) VALUES (57, 'Midnight library', 'This is a very cool book!!', '2025-05-30', '17:00:00', 'Narnia');")
+    cursor.commit()
+#add_bookings()
+
+def get_all_book_days():
+    connection = get_connection()
+    cursor = connection.cursor()
+    query = "SELECT *, (SELECT COUNT(*) FROM Leesboekingen WHERE Leesboekingen.dag_id = Leesdagen.id) FROM Leesdagen;"
+    cursor.execute(query)
+    data = cursor.fetchall()
+    return_list = []
+    print(data)
+    for row in data:
+        return_list.append(convert_row_to_dict(row))
+    return return_list
+
+def convert_row_to_dict(row):
+    vars = {}
+    vars["id"] = row[0]
+    vars["capacity"] = row[1]
+    vars["book_title"] = row[2]
+    vars["book_description"] = row[3]
+    vars["date"] = row[4]
+    vars["time"] = row[5]
+    vars["location"] = row[6]
+    vars["registered_count"] = row[7]
+    return vars
+#print(get_all_book_days())

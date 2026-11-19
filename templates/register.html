@@ -1,52 +1,184 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ book_title or 'Book Discussion Registration' }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Book Discussion Events</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/register.css') }}">
 </head>
+
 <body>
-    <div class="container">
-        <main class="card" role="main">
-            <section class="book">
-                <img class="book-image" src="{{ book_image or url_for('static', filename='images/default-book.jpg') }}" alt="{{ book_title or 'Book cover' }}">
+
+<div class="container">
+
+    <header class="page-header">
+        <h1>Leesclub Events</h1>
+        <p>Discover and register for our upcoming book discussions.</p>
+    </header>
+
+    <main class="event-layout">
+
+        <!-- LEFT: EVENT LIST -->
+        <aside class="event-sidebar">
+            <h2>Available events</h2>
+
+            <div class="event-list" id="event-list">
+
+                {% for event in events %}
+                <button
+                    type="button"
+                    class="event-item {% if loop.first %}active{% endif %}"
+                    data-id="{{ event.id }}"
+                    data-title="{{ event.book_title }}"
+                    data-description="{{ event.book_description }}"
+                    data-image="{{ event.book_image or url_for('static', filename='images/default-book.jpg') }}"
+                    data-date="{{ event.date }}"
+                    data-time="{{ event.time }}"
+                    data-location="{{ event.location }}"
+                    data-registered="{{ event.registered_count or 0 }}"
+                    data-capacity="{{ event.capacity if event.capacity is not none else '' }}"
+                >
+                    <span class="event-name">
+                        {{ event.book_title }}
+                    </span>
+
+                    <span class="event-date">
+                        {{ event.date }}
+                    </span>
+                </button>
+                {% endfor %}
+
+            </div>
+        </aside>
+
+
+        <!-- RIGHT: SELECTED EVENT -->
+        <section class="event-content" id="event-content">
+
+            <div class="event-details">
+
+                <img
+                    id="book-image"
+                    class="book-image"
+                    src="{{ events[0].book_image or url_for('static', filename='images/default-book.jpg') if events else url_for('static', filename='images/default-book.jpg') }}"
+                    alt="Book cover"
+                >
+
                 <div class="book-info">
-                    <h1 class="title">{{ book_title or 'Untitled Book' }}</h1>
-                    <p class="description">{{ book_description or 'No description available.' }}</p>
+
+                    <h2 class="title" id="book-title">
+                        {{ events[0].book_title if events else 'No events available' }}
+                    </h2>
+
+                    <p class="description" id="book-description">
+                        {{ events[0].book_description if events else 'Check back later for upcoming events.' }}
+                    </p>
+
                     <ul class="stats">
-                        <li><strong id="registered-count">{{ registered_count or 0 }}</strong> Registered</li>
-                        <li><strong id="spots-left">{% if capacity is not none and registered_count is not none %}{{ capacity - registered_count }}{% else %}—{% endif %}</strong> Spots left</li>
+                        <li>
+                            <strong id="registered-count">
+                                {{ events[0].registered_count or 0 if events else 0 }}
+                            </strong>
+                            Registered
+                        </li>
+
+                        <li>
+                            <strong id="spots-left">
+                                {% if events and events[0].capacity is not none %}
+                                    {{ events[0].capacity - (events[0].registered_count or 0) }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </strong>
+                            Spots left
+                        </li>
                     </ul>
+
                 </div>
-            </section>
+            </div>
 
-            <aside class="register" aria-labelledby="register-heading">
-                <form id="register-form" action="/register_for_event" method="post" novalidate>
-                    <input type="hidden" name="id" value="{{ id }}" >
-                    <h2 id="register-heading">Register for this discussion</h2>
-                    <div class="fields">
-                        <label>Email
-                            <input type="email" name="email" required placeholder="you@example.com">
-                        </label>
-                    </div>
-                    <button type="submit" class="btn">Register</button>
-                    <p class="message" id="message" aria-live="polite"></p>
+
+            <!-- EVENT INFORMATION -->
+            <div class="information">
+
+                <h3>Event information</h3>
+
+                <p>
+                    <strong>Date:</strong>
+                    <span id="event-date">
+                        {{ events[0].date if events else '—' }}
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Time:</strong>
+                    <span id="event-time">
+                        {{ events[0].time if events else '—' }}
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Location:</strong>
+                    <span id="event-location">
+                        {{ events[0].location if events else '—' }}
+                    </span>
+                </p>
+
+            </div>
+
+
+            <!-- REGISTRATION -->
+            <aside class="register">
+
+                <form id="register-form"
+                      action="/register_for_event"
+                      method="post">
+
+                    <input
+                        type="hidden"
+                        name="id"
+                        id="event-id"
+                        value="{{ events[0].id if events else '' }}"
+                    >
+
+                    <h3>Register for this discussion</h3>
+
+                    <label for="email">Email</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        placeholder="you@example.com"
+                    >
+
+                    <button type="submit" class="btn">
+                        Register
+                    </button>
+
+                    <p class="message" id="message"
+                       aria-live="polite"></p>
+
                 </form>
+
             </aside>
-            <section class="information">
-                <ul>
-                    <li>Datum: {{date}}</li>
-                    <li>Uur: {{time}}</li>
-                    <li>Locatie: {{location}}</li>
-                </ul>
-                    
 
-            </section>
-        </main>
-        <footer class="footer">Hosted by Leesclub</footer>
-    </div>
+        </section>
 
-    <script src="{{ url_for('static', filename='js/register.js')}}"></script>
+    </main>
+
+    <footer class="footer">
+        Hosted by Leesclub
+    </footer>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
+
 </body>
 </html>

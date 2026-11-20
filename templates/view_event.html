@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Book Discussion Events</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/view_event.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <header class="page-header">
+        <h1>Leesclub Events</h1>
+        <p>Discover and register for our upcoming book discussions.</p>
+    </header>
+
+    <main class="event-layout">
+
+        <!-- LEFT: EVENT LIST -->
+        <aside class="event-sidebar">
+            <h2>Available events</h2>
+
+            <div class="event-list" id="event-list">
+
+                {% for event in events %}
+                <button
+                    type="button"
+                    class="event-item {% if loop.first %}active{% endif %}"
+                    data-id="{{ event.id }}"
+                    data-title="{{ event.book_title }}"
+                    data-description="{{ event.book_description }}"
+                    data-image="{{ event.book_image or url_for('static', filename='images/default-book.jpg') }}"
+                    data-date="{{ event.date }}"
+                    data-time="{{ event.time }}"
+                    data-location="{{ event.location }}"
+                    data-registered="{{ event.registered_count or 0 }}"
+                    data-capacity="{{ event.capacity if event.capacity is not none else '' }}"
+                >
+                    <span class="event-name">
+                        {{ event.book_title }}
+                    </span>
+
+                    <span class="event-date">
+                        {{ event.date }}
+                    </span>
+                </button>
+                {% endfor %}
+
+            </div>
+        </aside>
+
+
+        <!-- RIGHT: SELECTED EVENT -->
+        <section class="event-content" id="event-content">
+
+            <div class="event-details">
+
+                <img
+                    id="book-image"
+                    class="book-image"
+                    src="{{ events[0].book_image or url_for('static', filename='images/default-book.jpg') if events else url_for('static', filename='images/default-book.jpg') }}"
+                    alt="Book cover"
+                >
+
+                <div class="book-info">
+
+                    <h2 class="title" id="book-title">
+                        {{ events[0].book_title if events else 'No events available' }}
+                    </h2>
+
+                    <p class="description" id="book-description">
+                        {{ events[0].book_description if events else 'Check back later for upcoming events.' }}
+                    </p>
+
+                    <ul class="stats">
+                        <li>
+                            <strong id="registered-count">
+                                {{ events[0].registered_count or 0 if events else 0 }}
+                            </strong>
+                            Registered
+                        </li>
+
+                        <li>
+                            <strong id="spots-left">
+                                {% if events and events[0].capacity is not none %}
+                                    {{ events[0].capacity - (events[0].registered_count or 0) }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </strong>
+                            Spots left
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+
+
+            <!-- EVENT INFORMATION -->
+            <div class="information">
+
+                <h3>Event information</h3>
+
+                <p>
+                    <strong>Date:</strong>
+                    <span id="event-date">
+                        {{ events[0].date if events else '—' }}
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Time:</strong>
+                    <span id="event-time">
+                        {{ events[0].time if events else '—' }}
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Location:</strong>
+                    <span id="event-location">
+                        {{ events[0].location if events else '—' }}
+                    </span>
+                </p>
+
+            </div>
+            <div class="event-list" id="event-list">
+
+                {% for registered in registered_people %}
+                <button
+                    type="button"
+                    class="event-item"
+                    data-email="{{ registered.email }}"
+                    data-name="{{ registered.name }}"
+                >
+                    <span class="event-name">
+                        {{ registered.name }}
+                    </span>
+
+                    <span class="event-date">
+                        {{ registered.email }}
+                    </span>
+                </button>
+                {% endfor %}
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        Hosted by Leesclub
+    </footer>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/view_event.js') }}"></script>
+
+</body>
+</html>

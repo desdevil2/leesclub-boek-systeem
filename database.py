@@ -149,10 +149,11 @@ def get_registered_for_event(id):
 
 
 def get_visitor_from_row(row):
+    print(row)
     id = row[0]
     dag_id = row[1]
-    unsub_token = row[2]
-    email = row[3]
+    email = row[2]
+    unsub_token = row[3]
     name = row[4]
     visitor = {
         "id" : id,

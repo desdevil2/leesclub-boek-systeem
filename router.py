@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect
-from database import register_for_event, RegisterStatus, get_all_book_days, create_event
+from database import register_for_event, RegisterStatus, get_all_book_days, create_event, get_registered_for_event
 app = Flask(__name__)
 
 @app.route("/")
@@ -42,5 +42,11 @@ def create_event_get():
 def create_event_post():
     create_event(request.form)
     return "SUCCES"
+
+@app.route("/view_event", methods=["GET"])
+def view_event():
+    events = get_all_book_days()
+    registered_people = get_registered_for_event(events[0]["id"])
+    return render_template("view_event.html", events=events, registered_people=registered_people)
 
 

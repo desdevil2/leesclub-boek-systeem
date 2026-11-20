@@ -23,7 +23,8 @@ def home():
 def register_for_event_post():
     email = request.form["email"]
     id = int(request.form["id"])
-    status = register_for_event(id, email)
+    name = request.form["name"]
+    status = register_for_event(id, email, name)
     if status == RegisterStatus.SUCCES:
         return "SUCCES"
     elif status == RegisterStatus.FULL:

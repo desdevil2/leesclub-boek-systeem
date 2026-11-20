@@ -35,13 +35,13 @@ def get_book_day(id):
     cursor.execute(query, [id])
     number = cursor.fetchone()
     row = tuple(data) + tuple(number)
-    return convert_row_to_dict(row)
+    return get_event_from_row(row)
 #connect_to_db()
 #print(get_book_day(1))
 
 
 
-def register_for_event(id, email):
+def register_for_event(id, email, name):
     connection = get_connection()
     cursor = connection.cursor()
     registration_data = get_book_day(id)
@@ -52,8 +52,8 @@ def register_for_event(id, email):
     elif is_registered(id, email):
         return RegisterStatus.DUPLICATE
     else:
-        query = "INSERT INTO Leesboekingen (dag_id, email, unsubscribe_key) VALUES (?, ?, 'abc');"
-        cursor.execute(query, [id, email])
+        query = "INSERT INTO Leesboekingen (dag_id, email, unsubscribe_key, name) VALUES (?, ?, 'abc', ?);"
+        cursor.execute(query, [id, email, name])
         connection.commit()
         return RegisterStatus.SUCCES
 
@@ -99,10 +99,10 @@ def get_all_book_days():
     return_list = []
     print(data)
     for row in data:
-        return_list.append(convert_row_to_dict(row))
+        return_list.append(get_event_from_row(row))
     return return_list
 
-def convert_row_to_dict(row):
+def get_event_from_row(row):
     vars = {}
     vars["id"] = row[0]
     vars["capacity"] = row[1]
@@ -134,4 +134,34 @@ def clear_events():
     query = "DELETE FROM Leesdagen WHERE date >= '2026-01-01';"
     cursor.execute(query)
     cursor.commit()
-clear_events()
+
+def get_registered_for_event(id):
+    connection = get_connection()
+    cursor = connection.cursor()
+    query = "SELECT * FROM Leesboekingen WHERE dag_id = ?;"
+    cursor.execute(query, [id])
+    data = cursor.fetchall()
+    visitors = []
+    for row in data:
+        visitor = get_visitor_from_row(row)
+        visitors.append(visitor)
+    return visitors
+
+
+def get_visitor_from_row(row):
+    id = row[0]
+    dag_id = row[1]
+    unsub_token = row[2]
+    email = row[3]
+    name = row[4]
+    visitor = {
+        "id" : id,
+        "dag_id" : dag_id,
+        "unsub_token" : unsub_token,
+        "email" : email,
+        "name" : name,
+    }
+    return visitor
+
+#clear_events()
+print(get_registered_for_event(2))

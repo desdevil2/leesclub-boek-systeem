@@ -7,7 +7,7 @@
         const data = new FormData(form);
         try {
             const res = await fetch(form.action, {
-                method: (form.method || 'POST'),
+                method: ('POST'),
                 body: data,
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             });
@@ -16,14 +16,11 @@
                 console.log("SUCCES")
             }
             else {
-                msgEl.classList.add('error');
-                msgEl.textContent = "Error while trying to register!";
+                console.log("Something went wrong");
             }
 
             form.reset();
         } catch (err) {
-            msgEl.classList.add('error');
-            msgEl.textContent = 'Network error, try again.';
             console.log(err)
         }
     });
@@ -51,3 +48,4 @@ async function logout(){
         console.log(text);
     }
 }
+

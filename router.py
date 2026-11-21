@@ -46,7 +46,7 @@ def create_event_get():
 @app.route("/create_event", methods=["POST"])
 def create_event_post():
     if check_login():
-        create_event(request.form)
+        create_event(request.form, request.files)
         return "SUCCES"
     else:
         return "NOT LOGGED IN"

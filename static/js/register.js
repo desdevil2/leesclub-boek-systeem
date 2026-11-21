@@ -65,7 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const eventLocation = document.getElementById("event-location");
 
     const eventId = document.getElementById("event-id");
-
     eventItems.forEach(item => {
 
         item.addEventListener("click", () => {
@@ -85,7 +84,15 @@ document.addEventListener("DOMContentLoaded", () => {
             bookTitle.textContent = data.title;
             bookDescription.textContent = data.description;
 
-            bookImage.src = data.image;
+
+            console.log(data.image.length)
+            if (data.image.length != 4){
+                bookImage.src = `data:image/jpeg;base64,${data.image}`;
+            }
+            else {
+                bookImage.src = "/static/images/default-book.jpg";
+            }
+            
             bookImage.alt = data.title;
 
             // Update registration statistics
@@ -117,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-function updateRegistered(){
+function updateRegistered() {
     registered = document.getElementById("registered-count")
     registered.innerHTML = parseInt(registered.innerHTML) + 1
     spotsLeft = document.getElementById("spots-left")

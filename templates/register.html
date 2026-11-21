@@ -35,7 +35,7 @@
                     data-id="{{ event.id }}"
                     data-title="{{ event.book_title }}"
                     data-description="{{ event.book_description }}"
-                    data-image="{{ event.book_image or url_for('static', filename='images/default-book.jpg') }}"
+                    data-image="{{ event.image}}"
                     data-date="{{ event.date }}"
                     data-time="{{ event.time }}"
                     data-location="{{ event.location }}"

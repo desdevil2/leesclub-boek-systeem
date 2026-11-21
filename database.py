@@ -1,5 +1,6 @@
 import pyodbc
 from credentials import database
+import base64
 def connect_to_db():
     try:
         connection = pyodbc.connect(database)
@@ -104,6 +105,7 @@ def get_all_book_days():
 
 def get_event_from_row(row):
     vars = {}
+    print(row)
     vars["id"] = row[0]
     vars["capacity"] = row[1]
     vars["book_title"] = row[2]
@@ -111,20 +113,31 @@ def get_event_from_row(row):
     vars["date"] = row[4]
     vars["time"] = row[5]
     vars["location"] = row[6]
-    vars["registered_count"] = row[7]
+    image = row[7]
+    if image != None:
+        vars["image"] = base64.b64encode(image).decode("utf-8")
+    else:
+        vars["image"] = None
+    vars["registered_count"] = row[8]
     return vars
 
-def create_event(data):
+def create_event(data, files):
     title = data["title"]
     description = data["description"]
     date = data["date"]
     location = data["location"]
     capacity = data["capacity"]
     time = data["time"]
+    image = files["image"]
+    blob = image.read()
+    size = len(blob)
+    if size == 0:
+        image = "NULL"
     connection = get_connection()
     cursor = connection.cursor()
-    query = "INSERT INTO Leesdagen (max_guests, book_name, book_description, date, time, location) VALUES (?, ?, ?, ?, ?, ?);"
-    cursor.execute(query, [capacity, title, description, date, time, location])
+    print(image)
+    query = "INSERT INTO Leesdagen (max_guests, book_name, book_description, date, time, location, image) VALUES (?, ?, ?, ?, ?, ?, ?);"
+    cursor.execute(query, [capacity, title, description, date, time, location, blob])
     cursor.commit()
 #print(get_all_book_days())
 

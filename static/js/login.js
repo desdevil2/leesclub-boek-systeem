@@ -14,5 +14,10 @@ async function submitHandler(e) {
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             });
     response = await res.text();
-    console.log(response);
+    if (response == "SUCCES") {
+        window.location.replace("/create_event");
+    }
+    else {
+        console.log(response);
+    }
 }

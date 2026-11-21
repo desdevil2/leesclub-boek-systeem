@@ -69,13 +69,9 @@ def login_post():
     password = request.form["password"]
     if name == "abc" and password == "abc":
         session["name"] = "abc"
-    else: 
-        del session["name"]
-    if check_login():
-        print("LOGGED IN")
+        return "SUCCES"
     else:
-        print("NOT LOGGED IN")
-    return "SUCCES"
+        return "NO"
 
 
 def check_login():
@@ -84,3 +80,10 @@ def check_login():
         return True
     except KeyError:
         return False
+
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    if check_login:
+        session.pop("name", None)
+    return "SUCCES"

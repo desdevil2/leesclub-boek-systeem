@@ -13,12 +13,14 @@
     height: 40vh;
     margin-top: 30vh;
     margin-bottom: 30vh;
-    background-color: aliceblue;
+    background-color: #FFFFFF;
+    border-radius: 30px;
+    box-shadow: 0px 2px 4px -2px #424040;
 }
 
 
 body {
-    background-color: rgb(150, 205, 205);
+    background-color: #f5f7fb;
 }
 
 label {

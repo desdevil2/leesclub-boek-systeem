@@ -28,3 +28,26 @@
         }
     });
 })();
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    var logoutBtn = document.getElementById("logout");
+    logoutBtn.addEventListener("click", logout)});
+
+
+
+async function logout(){
+    var res = await fetch("/logout", {
+        method: "POST",
+        headers : {
+            "X-Requested_With" : "XMLHTTPRequest"
+        }
+    });
+    var text = await res.text();
+    if (text == "SUCCES") {
+        window.location.replace("/login")
+    }
+    else {
+        console.log(text);
+    }
+}

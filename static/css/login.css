@@ -1,0 +1,53 @@
+.input {
+    width: 30%;
+    margin-left: 35%;
+    margin-right: 30%;
+    margin-top: 1vh;
+}
+
+.container {
+    width: 40%;
+    margin-left: 30%;
+    margin-right: 30%;
+
+    height: 40vh;
+    margin-top: 30vh;
+    margin-bottom: 30vh;
+    background-color: aliceblue;
+}
+
+
+body {
+    background-color: rgb(150, 205, 205);
+}
+
+label {
+    width: 30%;
+    margin-left: 35%;
+    margin-right: 30%;
+}
+
+#name {
+    margin-bottom: 4vh;
+}
+
+#password {
+    margin-bottom: 8vh;
+}
+
+
+#namelabel {
+    padding-top: 8vh;
+    display: block;
+}
+
+
+button {
+    width: 20%;
+    margin: auto;
+    display: block;
+    border-radius: 4px;
+    background-color: darkgreen;
+    color: white;
+    height: 4vh;
+}

@@ -165,4 +165,4 @@ def get_visitor_from_row(row):
     return visitor
 
 #clear_events()
-print(get_registered_for_event(2))
+#print(get_registered_for_event(2))

@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 from database import register_for_event, RegisterStatus, get_all_book_days, create_event, get_registered_for_event
+from credentials import key
 app = Flask(__name__)
+app.config["SECRET_KEY"] = key
 
 @app.route("/")
 def hello_world():
@@ -36,12 +38,18 @@ def register_for_event_post():
     
 @app.route("/create_event", methods=["GET"])
 def create_event_get():
-    return render_template("create_event.html")
+    if check_login():
+        return render_template("create_event.html")
+    else:
+        return redirect("login")
 
 @app.route("/create_event", methods=["POST"])
 def create_event_post():
-    create_event(request.form)
-    return "SUCCES"
+    if check_login():
+        create_event(request.form)
+        return "SUCCES"
+    else:
+        return "NOT LOGGED IN"
 
 @app.route("/view_event", methods=["GET"])
 def view_event():
@@ -50,3 +58,29 @@ def view_event():
     return render_template("view_event.html", events=events, registered_people=registered_people)
 
 
+@app.route("/login", methods=["GET"])
+def login():
+    return render_template("login.html")
+
+
+@app.route("/login", methods=["POST"])
+def login_post():
+    name = request.form["name"]
+    password = request.form["password"]
+    if name == "abc" and password == "abc":
+        session["name"] = "abc"
+    else: 
+        del session["name"]
+    if check_login():
+        print("LOGGED IN")
+    else:
+        print("NOT LOGGED IN")
+    return "SUCCES"
+
+
+def check_login():
+    try:
+        name = session["name"]
+        return True
+    except KeyError:
+        return False

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, session
-from database import register_for_event, RegisterStatus, get_all_book_days, create_event, get_registered_for_event
+from database import register_for_event, RegisterStatus, get_all_book_days, get_registered_for_event, validate_create_event_data, validate_register_data
 from credentials import key
 app = Flask(__name__)
 app.config["SECRET_KEY"] = key
@@ -23,18 +23,21 @@ def home():
 
 @app.route("/register_for_event", methods=["POST"])
 def register_for_event_post():
-    email = request.form["email"]
-    id = int(request.form["id"])
-    name = request.form["name"]
-    status = register_for_event(id, email, name)
-    if status == RegisterStatus.SUCCES:
-        return "SUCCES"
-    elif status == RegisterStatus.FULL:
-        return "FULL"
-    elif status == RegisterStatus.DUPLICATE:
-        return "DUPLICATE"
+    if validate_register_data(request.form):
+        email = request.form["email"]
+        id = int(request.form["id"])
+        name = request.form["name"]
+        status = register_for_event(id, email, name)
+        if status == RegisterStatus.SUCCES:
+            return "SUCCES"
+        elif status == RegisterStatus.FULL:
+            return "FULL"
+        elif status == RegisterStatus.DUPLICATE:
+            return "DUPLICATE"
+        else:
+            return "ERROR"
     else:
-        return "ERROR"
+        return "FAILURE"
     
 @app.route("/create_event", methods=["GET"])
 def create_event_get():
@@ -46,8 +49,11 @@ def create_event_get():
 @app.route("/create_event", methods=["POST"])
 def create_event_post():
     if check_login():
-        create_event(request.form, request.files)
-        return "SUCCES"
+        if validate_create_event_data(request.form, request.files):
+            #create_event(request.form, request.files)
+            return "SUCCES"
+        else:
+            return "FAILURE"
     else:
         return "NOT LOGGED IN"
 

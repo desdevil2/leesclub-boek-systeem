@@ -10,9 +10,8 @@
 }
 
 #logout:hover {
-    cursor:grab;
-    transform: scale(1.1);
-    transition-duration: 0.2s;
+    cursor: pointer;
+    background-color: rgb(190, 33, 33);;
 }
 :root {
     --bg: #f5f7fb;
@@ -297,4 +296,19 @@ textarea {
     .cancel-btn {
         width: 100%;
     }
+}
+
+#loading, #registering {
+    height: 4vh;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#registering {
+    margin-top: 2vh;
+}
+
+#submit-group {
+    margin-top: 15px;
 }

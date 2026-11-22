@@ -5,6 +5,9 @@
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
         const data = new FormData(form);
+        document.getElementById("register-btn").disabled=true;
+        document.getElementById("loading").src = "/static/images/loading.gif";
+        document.getElementById("registering").innerHTML = "Registering...";
         try {
             const res = await fetch(form.action, {
                 method: ('POST'),
@@ -13,16 +16,20 @@
             });
             responseText = await res.text()
             if (responseText == "SUCCES") {
-                console.log("SUCCES")
+                console.log("SUCCES");
+                form.reset();
             }
             else {
                 console.log("Something went wrong");
             }
 
-            form.reset();
+            
         } catch (err) {
             console.log(err)
         }
+                document.getElementById("loading").src = "";
+        document.getElementById("register-btn").disabled=false;
+        document.getElementById("registering").innerHTML = "";
     });
 })();
 

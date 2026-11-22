@@ -7,6 +7,9 @@
         const msgEl = document.getElementById('message');
         msgEl.textContent = '';
         const data = new FormData(form);
+        document.getElementById("register-btn").disabled=true;
+        document.getElementById("loading").src = "/static/images/loading.gif";
+        document.getElementById("registering").innerHTML = "Registering...";
         try {
             const res = await fetch(form.action, {
                 method: (form.method || 'POST'),
@@ -24,7 +27,8 @@
                 if (json.spots_left != null) {
                     document.getElementById('spots-left').textContent = json.spots_left;
                 }
-                updateRegistered()
+                updateRegistered();
+                form.reset();
             }
             else if (responseText == "FULL") {
                 msgEl.classList.add('error');
@@ -39,12 +43,14 @@
                 msgEl.textContent = "Error while trying to register!";
             }
 
-            form.reset();
         } catch (err) {
             msgEl.classList.add('error');
             msgEl.textContent = 'Network error, try again.';
             console.log(err)
         }
+        document.getElementById("loading").src = "";
+        document.getElementById("register-btn").disabled=false;
+        document.getElementById("registering").innerHTML = "";
     });
 })();
 

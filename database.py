@@ -1,6 +1,9 @@
 import pyodbc
 from credentials import database
 import base64
+import re
+from datetime import date
+from time import strptime
 def connect_to_db():
     try:
         connection = pyodbc.connect(database)
@@ -105,7 +108,6 @@ def get_all_book_days():
 
 def get_event_from_row(row):
     vars = {}
-    print(row)
     vars["id"] = row[0]
     vars["capacity"] = row[1]
     vars["book_title"] = row[2]
@@ -179,3 +181,38 @@ def get_visitor_from_row(row):
 
 #clear_events()
 #print(get_registered_for_event(2))
+
+
+def validate_create_event_data(data, files):
+    fields = ["title", "description", "date", "location", "time", "date", "capacity"]
+    for field in fields:
+        if not check_if_exists(data, field):
+            return False
+    if "image" not in files:
+        return False
+    if not data["capacity"].isdigit():
+        return False
+    try:
+        date.fromisoformat(data["date"])
+    except ValueError:
+        return False
+    try:
+        strptime(data["time"], '%H:%M')
+    except ValueError:
+        return False
+    return True
+    
+
+
+def  validate_register_data(data):
+    if not check_if_exists(data, "name"):
+        return False
+    if not check_if_exists(data, "email"):
+        return False
+    pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    return bool(re.match(pattern, data["email"]))
+
+def check_if_exists(data, index):
+    if index not in data or type(data[index])!= str or len(data[index]) == 0:
+        return False
+    return True

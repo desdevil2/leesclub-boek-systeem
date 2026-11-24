@@ -1,5 +1,5 @@
 
-#logout {
+/*#logout {
     float: right;
     margin-right: 10%;
     width: 15%;
@@ -12,7 +12,7 @@
 #logout:hover {
     cursor: pointer;
     background-color: rgb(190, 33, 33);;
-}
+}*/
 :root {
     --bg: #f5f7fb;
     --card: #ffffff;

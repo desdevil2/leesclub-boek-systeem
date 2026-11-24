@@ -18,8 +18,8 @@ def home():
     # vars["date"] = "01/04/2026"
     # vars["time"] = "19:00"
     # vars["location"] = "Meilweg 7, 3600 Genk"
-
-    return render_template("register.html", events=data)
+    print(check_login())
+    return render_template("register.html", events=data, login=check_login())
 
 @app.route("/register_for_event", methods=["POST"])
 def register_for_event_post():
@@ -42,7 +42,7 @@ def register_for_event_post():
 @app.route("/create_event", methods=["GET"])
 def create_event_get():
     if check_login():
-        return render_template("create_event.html")
+        return render_template("create_event.html", login=True)
     else:
         return redirect("login")
 
@@ -61,12 +61,12 @@ def create_event_post():
 def view_event():
     events = get_all_book_days()
     registered_people = get_registered_for_event(events[0]["id"])
-    return render_template("view_event.html", events=events, registered_people=registered_people)
+    return render_template("view_event.html", events=events, registered_people=registered_people, login=check_login())
 
 
 @app.route("/login", methods=["GET"])
 def login():
-    return render_template("login.html")
+    return render_template("login.html", login=check_login())
 
 
 @app.route("/login", methods=["POST"])
@@ -88,8 +88,8 @@ def check_login():
         return False
 
 
-@app.route("/logout", methods=["POST"])
+@app.route("/logout", methods=["GET", "POST"])
 def logout():
     if check_login:
         session.pop("name", None)
-    return "SUCCES"
+    return redirect("/login")

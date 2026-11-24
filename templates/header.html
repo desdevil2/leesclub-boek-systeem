@@ -1,0 +1,11 @@
+<nav>
+        <ul id="nav">
+            <li><a href="/register" class="{% if request.endpoint == 'home' %}activenav{% endif %}">Register</a></li>
+            <li><a href="/create_event" class="{% if request.endpoint == 'create_event_get' %}activenav{% endif %}">Create</a></li>
+            <li><a href="/view_event" class="{% if request.endpoint == 'view_event' %}activenav{% endif %}">View</a></li>
+            {% if not login%}<li id="login"><a href="/login">Login</a></li> {%endif%}
+            {% if login%}<li id="logout"><a href="/logout">Logout</a></li> {%endif%}
+        </ul>
+    </nav>
+<link rel="stylesheet"
+          href="{{ url_for('static', filename='css/header.css') }}">

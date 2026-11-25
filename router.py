@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, session
-from database import register_for_event, RegisterStatus, get_all_book_days, get_registered_for_event, validate_create_event_data, validate_register_data
+from database import register_for_event, RegisterStatus, get_all_book_days, get_registered_for_event, validate_create_event_data, validate_register_data, create_event
 from credentials import key
 app = Flask(__name__)
 app.config["SECRET_KEY"] = key
@@ -50,7 +50,7 @@ def create_event_get():
 def create_event_post():
     if check_login():
         if validate_create_event_data(request.form, request.files):
-            #create_event(request.form, request.files)
+            create_event(request.form, request.files)
             return "SUCCES"
         else:
             return "FAILURE"
